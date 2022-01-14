@@ -3,9 +3,16 @@ VALUES
 ('Communications'),
 ('Engineering'),
 ('Research');
+('Sales');
 
-INSERT INTO roles (title, salary, department_id)
+INSERT INTO ROLES (title, salary, department_id)
 VALUES
-('COMMUNICATIONS', 30000, 3),
-('Engineering', 50000, 2),
-('Research', 60000, 1);
+('Communications Coordinator', 30000, 1),
+('Lead Engineer', 50000, 2),
+('Lead Researcher', 60000, 3)
+('Sales Manager', 80000, 4);
+
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES 
+("Sam", "Smith", )
