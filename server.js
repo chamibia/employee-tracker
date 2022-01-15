@@ -70,3 +70,30 @@ function startPrompt() {
       }
     });
 }
+
+//functions to call prompts
+//View all employees
+function viewAllEmployees() {
+  db.query(
+    "SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee employee LEFT JOIN employee m ON employee.manager_id = m.id INNER JOIN roles ON employee.role_id = roles.id INNER JOIN department ON roles.department_id = department.id ORDER BY ID ASC";
+  );
+}
+
+//View all roles
+
+//View all employees by departments
+
+//Add Employee
+
+//Update Employee
+
+//Add Employee Role
+
+//Add Department
+SELECT department_id AS id, 
+                  department.name AS department,
+                  SUM(salary) AS budget
+                  FROM  roles  
+                  INNER JOIN department ON roles.department_id = department.id 
+                  inner join employee on employee.role_id = roles.id
+                  where department.id = "1";

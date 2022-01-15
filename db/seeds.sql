@@ -1,18 +1,23 @@
-INSERT INTO DEPARTMENTS (department_name)
+INSERT INTO departments 
 VALUES 
-('Communications'),
-('Engineering'),
-('Research');
-('Sales');
+(2, "Communications"),
+(3,"Engineering"),
+(1, "Research"),
+(4,"Sales");
 
-INSERT INTO ROLES (title, salary, department_id)
+INSERT INTO roles (title, salary, id, department_id)
 VALUES
-('Communications Coordinator', 30000, 1),
-('Lead Engineer', 50000, 2),
-('Lead Researcher', 60000, 3)
-('Sales Manager', 80000, 4);
+("Communications Coordinator", 30000, 1, 2),
+("Lead Engineer", 50000, 2, 3),
+("Lead Researcher", 60000, 3, 1),
+("Sales Associate", 45000, 5, 4),
+("Sales Manager", 80000, 4, 4);
 
-
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+--id won't auto increment, had to input myself --
+INSERT INTO employee 
 VALUES 
-("Sam", "Smith", )
+(1,"Sam", "Smith", 2, NULL),
+(2,"Laura", "Key", 1, 2),
+(3,"Melanie", "Pops", 4, 1),
+(4, "Dan", "Long", 5, 1),
+(5, "Max", "Forgoto", 3, 1);
