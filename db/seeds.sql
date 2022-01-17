@@ -21,3 +21,7 @@ VALUES
 (3,"Melanie", "Pops", 4, 1),
 (4, "Dan", "Long", 5, 1),
 (5, "Max", "Forgoto", 3, 1);
+
+SELECT * FROM departments;
+SELECT * FROM roles; 
+SELECT * FROM employee; 

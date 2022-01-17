@@ -9,7 +9,7 @@ const db = mysql.createConnection({
   user: "root",
   //MY MySQL password
   password: "password",
-  database: "employee_trackerDB",
+  database: "employees",
 });
 
 // Start server after db connection
@@ -20,7 +20,7 @@ db.connect((err) => {
 });
 
 //Initial Prompt
-function startPrompt() {
+startPrompt = () => {
   inquirer
     .prompt([
       {
@@ -28,72 +28,168 @@ function startPrompt() {
         message: "What would you like to do?",
         name: "choice",
         choices: [
-          "View all Employees?",
-          "View all Employees by Roles?",
-          "View all Employees by Departments?",
-          "Update Employee?",
-          "Add Employee?",
-          "Add role?",
+          "View all departments?",
+          "View all roles?",
+          "View all employees?",
           "Add department?",
+          "Add role?",
+          "Add an employee?",
+          "Update an employee role?",
+          "Update an employee role?",
         ],
       },
     ])
     .then((answer) => {
-      switch (answer.choice) {
-        case "View all Employees?":
-          viewAllEmployees();
-          break;
-
-        case "View all Employyes by Roles?":
-          viewAllRoles();
-          break;
-
-        case "View all Employees by Departments?":
+      console.log(answer);
+      let userChoice = answer.choice;
+      console.log(userChoice);
+      switch (userChoice) {
+        case "View all departments?":
           viewAllDepartments();
           break;
 
-        case "Update Employee?":
-          updateEmployee();
+        case "View all roles?":
+          viewAllRoles();
           break;
 
-        case "Add Employee?":
-          addEmployee();
+        case "View all employees?":
+          viewAllEmployees();
+          break;
+
+        case "Add department":
+          addDepartment();
           break;
 
         case "Add role?":
           addRole();
           break;
 
-        case "Add department?":
-          addDepartment();
+        case "Add an employee?":
+          addEmployee();
+          break;
+
+        case "Update an employee role?":
+          updateRole();
           break;
       }
     });
-}
+};
 
 //functions to call prompts
 //View all employees
 function viewAllEmployees() {
+  db.query("SELECT * FROM employee;", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    startPrompt();
+  });
+}
+
+// View all roles function
+function viewAllRoles() {
+  db.query("SELECT * FROM roles;", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    startPrompt();
+  });
+}
+
+// Add department function
+function viewAllDepartments() {
+  db.query("SELECT * FROM departments;", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    startPrompt();
+  });
+}
+
+// Add role function
+function addRole() {
   db.query(
-    "SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee employee LEFT JOIN employee m ON employee.manager_id = m.id INNER JOIN roles ON employee.role_id = roles.id INNER JOIN department ON roles.department_id = department.id ORDER BY ID ASC";
+    "SELECT roles.title AS Title, roles.id AS Id, roles.department AS Department, role.salary AS Salary FROM role",
+    function (err, res) {
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "title",
+            message: "what is the roles title?",
+          },
+          {
+            type: "input",
+            name: "department",
+            message: "In which department is this role?",
+          },
+          {
+            type: "input",
+            name: "managerId",
+            message: "Enter their managers id",
+          },
+        ])
+        .then(function (res) {
+          db.query(
+            "INSERT INTO roles SET?",
+            {
+              title: res.Title,
+              salary: res.Salary,
+            },
+            function (err) {
+              if (err) throw err;
+              console.table(res);
+              startPrompt();
+            }
+          );
+        });
+    }
   );
 }
 
-//View all roles
+// Add an employee function
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "What is the employees first name?",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "What is the employees last name?",
+      },
+      {
+        type: "input",
+        name: "manager",
+        message: "Who is the employees manager?",
+        choices: addManager(),
+      },
+    ])
+    .then(function (userChoice) {
+      const rolesId = viewAllRoles().indexOf(userChoice.roles) + 1;
+      const ManagerId = selectManager().indexOf(userChoice) + 1;
+      db.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: userChoice.firstName,
+          last_name: userChoice.last,
+          manager_id: ManagerId,
+          role_id: rolesId,
+        },
+        function (err) {
+          if (err) throw err;
+          console.table(userChoice);
+          startPrompt();
+        }
+      );
+    });
+}
 
-//View all employees by departments
+// Update an employee role function
 
-//Add Employee
-
-//Update Employee
-
-//Add Employee Role
+// Update an employee role function
 
 //Add Department
-SELECT department_id AS id, 
-                  department.name AS department,
-                  SUM(salary) AS budget
-                  FROM  roles  
-                  INNER JOIN department ON roles.department_id = department.id 
-                  inner join employee on employee.role_id = roles.id
-                  where department.id = "1";
+// (SELECT department_id AS id, department.name AS department, SUM(salary) AS budget FROM  roles INNER JOIN department ON roles.department_id = department.id inner join employee on employee.role_id = roles.id where department.id = "1");
+
+// "SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.name AS department, roles.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee employee LEFT JOIN employee m ON employee.manager_id = m.id INNER JOIN roles ON employee.role_id = roles.id INNER JOIN departments ON roles.departments_id = departments.id ORDER BY ID ASC"
