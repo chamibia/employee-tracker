@@ -102,125 +102,85 @@ function viewAllDepartments() {
   });
 }
 
-//Select Role title for Add employee prompt
-// let roleArr = [];
-// function selectRole() {
-//   db.query("SELECT * FROM roles", function (err, res) {
-//     if (err) throw err;
-//     for (var i = 0; i < res.length; i++) {
-//       roleArr.push(res[i].title);
-//     }
-//   });
-//   return roleArr;
-// }
-
-// //Select Managers for Add employee function
-// let managersArr = [];
-// function addManager() {
-//   db.query(
-//     "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
-//     function (err, res) {
-//       if (err) throw err;
-//       for (var i = 0; i < res.length; i++) {
-//         managersArr.push(res[i].first_name);
-//       }
-//     }
-//   );
-//   return managersArr;
-// }
-
 // // Add role function
-// function addRole() {
-//   db.query(
-//     "SELECT roles.title AS Title, roles.id AS Id, roles.department AS Department, roles.salary AS Salary FROM role",
-//     function (err, res) {
-//       inquirer
-//         .prompt([
-//           {
-//             type: "input",
-//             name: "title",
-//             message: "what is the roles title?",
-//           },
-//           {
-//             type: "input",
-//             name: "department",
-//             message: "In which department is this role?",
-//           },
-//           {
-//             type: "input",
-//             name: "managerId",
-//             message: "Enter their managers id",
-//           },
-//           //   {
-//           //     type: "input",
-//           //     name: "salary",
-//           //     message: "What is the salary?",
-//           //   },
-//         ])
-//         .then(function (res) {
-//           db.query(
-//             "INSERT INTO roles SET ?",
-//             {
-//               title: res.Title,
-//               salary: res.Salary,
-//             },
-//             function (err) {
-//               if (err) throw err;
-//               console.table(res);
-//               startPrompt();
-//             }
-//           );
-//         });
-//     }
-//   );
-// }
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "what is the roles title?",
+      },
+      {
+        type: "input",
+        name: "department_id",
+        message: "Enter the department ID for this role",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary?",
+      },
+    ])
+    .then((res) => {
+      db.query(
+        "INSERT INTO roles SET ?",
+        {
+          title: res.title,
+          salary: res.salary,
+          department_id: res.department_id,
+        },
+        (err, res) => {
+          if (err) throw err;
+          console.table(res);
+          startPrompt();
+        }
+      );
+    });
+}
 
 // // Add an employee
-// function addEmployee() {
-//   inquirer
-//     .prompt([
-//       {
-//         type: "input",
-//         name: "firstName",
-//         message: "What is the employees first name?",
-//       },
-//       {
-//         type: "input",
-//         name: "lastName",
-//         message: "What is the employees last name?",
-//       },
-//       {
-//         name: "role",
-//         type: "list",
-//         message: "What is the role",
-//         choices: selectRole(),
-//       },
-//       {
-//         type: "input",
-//         name: "manager",
-//         message: "Who is the employees manager?",
-//         choices: addManager(),
-//       },
-//     ])
-// //     .then(function (userChoice) {
-// //     //   const rolesId = viewAllRoles().indexOf(userChoice.roles) + 1;
-// //     //   const managerId = selectManager().indexOf(userChoice) + 1;
-// //       db.query(
-// //         `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
-// //         // {
-// //         //   first_name: userChoice.firstName,
-// //         //   last_name: userChoice.lastName,
-// //         //   manager_id: managerId,
-// //         //   role_id: rolesId,
-// //         // },
-// //         function (err) {
-// //           if (err) throw err;
-// //           console.table(userChoice);
-// //           startPrompt();
-// //         }
-// //       );
-// //     });
-// // }
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "What is the employees first name?",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "What is the employees last name?",
+      },
+      {
+        type: "input",
+        name: "role",
+        message: "What is the employess ID number?",
+      },
+      {
+        type: "input",
+        name: "manager",
+        message: "What is the employees manager ID number?",
+      },
+    ])
+    .then((res) => {
+      db.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: res.firstName,
+          last_name: res.lastName,
+          role_id: res.role,
+          manager_id: res.manager,
+        },
+        (err, res) => {
+          if (err) throw err;
+          console.table(res);
+          startPrompt();
+        }
+      );
+    });
+}
 
 // Add new department
 
@@ -255,3 +215,34 @@ function addDepartment(createDepartment) {
 // (SELECT department_id AS id, department.name AS department, SUM(salary) AS budget FROM  roles INNER JOIN department ON roles.department_id = department.id inner join employee on employee.role_id = roles.id where department.id = "1");
 
 // "SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.name AS department, roles.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee employee LEFT JOIN employee m ON employee.manager_id = m.id INNER JOIN roles ON employee.role_id = roles.id INNER JOIN departments ON roles.departments_id = departments.id ORDER BY ID ASC"
+
+//Select Role title for Add employee prompt
+// let roleArr = [];
+// function selectRole() {
+//   db.query("SELECT * FROM roles", function (err, res) {
+//     if (err) throw err;
+//     for (var i = 0; i < res.length; i++) {
+//       roleArr.push(res[i].title);
+//     }
+//   });
+//   return roleArr;
+// }
+
+// //Select Managers for Add employee function
+// let managersArr = [];
+// function addManager() {
+//   db.query(
+//     "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
+//     function (err, res) {
+//       if (err) throw err;
+//       for (var i = 0; i < res.length; i++) {
+//         managersArr.push(res[i].first_name);
+//       }
+//     }
+//   );
+//   return managersArr;
+// }
+
+// db.query(
+//   "SELECT roles.title AS Title, roles.id AS Id, roles.department AS Department, roles.salary AS Salary FROM role",
+// function (err, res) {
