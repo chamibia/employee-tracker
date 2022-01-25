@@ -184,27 +184,28 @@ function addEmployee() {
 
 // Add new department
 
-createDepartment = () => {
-  return inquirer
+function addDepartment() {
+  inquirer
     .prompt([
       {
         type: "input",
-        name: "departments_name",
-        message: "Enter the department name you would like to add",
+        name: "title",
+        message: "Please enter the name of the department",
       },
     ])
-    .then(addDepartment);
-};
-
-function addDepartment(createDepartment) {
-  const sql = `INSERT INTO
-        departments (departments_name) VALUES ('${createDepartment.departments_name}');`;
-
-  db.query(sql, (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    startPrompt();
-  });
+    .then(function (res) {
+      db.query(
+        "INSERT INTO departments SET ?",
+        {
+          department_name: res.department_name,
+        },
+        function (err) {
+          if (err) throw err;
+          console.table(res);
+          startPrompt();
+        }
+      );
+    });
 }
 
 // Update an employee role
