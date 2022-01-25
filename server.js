@@ -189,7 +189,7 @@ function addDepartment() {
     .prompt([
       {
         type: "input",
-        name: "title",
+        name: "depoName",
         message: "Please enter the name of the department",
       },
     ])
@@ -197,7 +197,7 @@ function addDepartment() {
       db.query(
         "INSERT INTO departments SET ?",
         {
-          department_name: res.department_name,
+          department_name: res.depoName,
         },
         function (err) {
           if (err) throw err;
