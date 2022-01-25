@@ -208,42 +208,49 @@ function addDepartment() {
     });
 }
 
-// Update an employee role
-
 // Update an employee role function
-
-//Add Department
-// (SELECT department_id AS id, department.name AS department, SUM(salary) AS budget FROM  roles INNER JOIN department ON roles.department_id = department.id inner join employee on employee.role_id = roles.id where department.id = "1");
-
-// "SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.name AS department, roles.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee employee LEFT JOIN employee m ON employee.manager_id = m.id INNER JOIN roles ON employee.role_id = roles.id INNER JOIN departments ON roles.departments_id = departments.id ORDER BY ID ASC"
-
-//Select Role title for Add employee prompt
-// let roleArr = [];
-// function selectRole() {
-//   db.query("SELECT * FROM roles", function (err, res) {
-//     if (err) throw err;
-//     for (var i = 0; i < res.length; i++) {
-//       roleArr.push(res[i].title);
-//     }
-//   });
-//   return roleArr;
-// }
-
-// //Select Managers for Add employee function
-// let managersArr = [];
-// function addManager() {
-//   db.query(
-//     "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
-//     function (err, res) {
-//       if (err) throw err;
-//       for (var i = 0; i < res.length; i++) {
-//         managersArr.push(res[i].first_name);
-//       }
-//     }
-//   );
-//   return managersArr;
-// }
-
-// db.query(
-//   "SELECT roles.title AS Title, roles.id AS Id, roles.department AS Department, roles.salary AS Salary FROM role",
-// function (err, res) {
+function updateRole() {
+  db.query("SELECT * FROM employee ORDER BY first_name", (err, res) => {
+    let employee = res.map((employee) => {
+      console.log(res);
+      return {
+        name: employee.first_name + " " + employee.last_name,
+        value: employee.id,
+      };
+    });
+    db.query("SELECT * FROM roles ORDER BY title", (err, res) => {
+      let roles = res.map((role) => {
+        return {
+          name: role.title,
+          value: role.id,
+        };
+      });
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "updateEmployee",
+            message: " Please enter employees name.",
+            choices: employee,
+          },
+          {
+            type: "list",
+            name: "updateRole",
+            message: "Please enter the employees new role.",
+            choices: roles,
+          },
+        ])
+        .then((res) => {
+          db.query(
+            "UPDATE employee SET role_id = ? WHERE id = ?",
+            [res.updateRole, res.updateEmployee],
+            function (err) {
+              if (err) throw err;
+              console.table(res);
+              startPrompt();
+            }
+          );
+        });
+    });
+  });
+}
