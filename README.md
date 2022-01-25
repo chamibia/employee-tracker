@@ -20,7 +20,7 @@ A backend app that allows a business own to view all departments, roles and empl
 
 ## Installation
 
-npm i in the terminal to install MySQL2, Inquirer and console.table
+"npm i" in the terminal to install MySQL2, Inquirer and console.table
 
 ## Usage
 
