@@ -30,10 +30,9 @@ startPrompt = () => {
           "View all departments?",
           "View all roles?",
           "View all employees?",
-          "Add department?",
+          "Would you like to add a department?",
           "Add role?",
           "Add an employee?",
-          "Update an employee role?",
           "Update an employee role?",
         ],
       },
@@ -55,7 +54,7 @@ startPrompt = () => {
           viewAllEmployees();
           break;
 
-        case "Add department":
+        case "Would you like to add a department?":
           addDepartment();
           break;
 
@@ -74,7 +73,8 @@ startPrompt = () => {
     });
 };
 
-//functions to call prompts
+//functions to create prompts
+
 //View all employees
 function viewAllEmployees() {
   db.query("SELECT * FROM employee;", (err, res) => {
@@ -93,7 +93,7 @@ function viewAllRoles() {
   });
 }
 
-//view all departments
+//View all departments
 function viewAllDepartments() {
   db.query("SELECT * FROM departments;", (err, res) => {
     if (err) throw err;
@@ -103,31 +103,31 @@ function viewAllDepartments() {
 }
 
 //Select Role title for Add employee prompt
-let roleArr = [];
-function selectRole() {
-  db.query("SELECT * FROM roles", function (err, res) {
-    if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-      roleArr.push(res[i].title);
-    }
-  });
-  return roleArr;
-}
+// let roleArr = [];
+// function selectRole() {
+//   db.query("SELECT * FROM roles", function (err, res) {
+//     if (err) throw err;
+//     for (var i = 0; i < res.length; i++) {
+//       roleArr.push(res[i].title);
+//     }
+//   });
+//   return roleArr;
+// }
 
-//Select Managers for Add employee function
-let managersArr = [];
-function addManager() {
-  db.query(
-    "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
-    function (err, res) {
-      if (err) throw err;
-      for (var i = 0; i < res.length; i++) {
-        managersArr.push(res[i].first_name);
-      }
-    }
-  );
-  return managersArr;
-}
+// //Select Managers for Add employee function
+// let managersArr = [];
+// function addManager() {
+//   db.query(
+//     "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
+//     function (err, res) {
+//       if (err) throw err;
+//       for (var i = 0; i < res.length; i++) {
+//         managersArr.push(res[i].first_name);
+//       }
+//     }
+//   );
+//   return managersArr;
+// }
 
 // // Add role function
 // function addRole() {
@@ -222,27 +222,30 @@ function addManager() {
 // //     });
 // // }
 
-// // Add department
-// const addDepartment = () => {
-//   inquirer
-//     .prompt({
-//       type: "input",
-//       name: "name",
-//       message: "Enter department name",
-//       validate: (promptInput) => validateInput(promptInput),
-//     })
-//     .then((res) => {
-//       const sql = `
-//         INSERT INTO
-//         department (name)
-//         VALUES (?)`;
-//       db.query(sql, res.name, (err) => {
-//         if (err) throw err;
-//         console.table(res);
-//         startPrompt();
-//       });
-//     });
-// };
+// Add new department
+
+createDepartment = () => {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "departments_name",
+        message: "Enter the department name you would like to add",
+      },
+    ])
+    .then(addDepartment);
+};
+
+function addDepartment(createDepartment) {
+  const sql = `INSERT INTO
+        departments (departments_name) VALUES ('${createDepartment.departments_name}');`;
+
+  db.query(sql, (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    startPrompt();
+  });
+}
 
 // Update an employee role
 
