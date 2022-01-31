@@ -46,6 +46,10 @@ chamibia
 
 bischami@gmail.com
 
+## Recording Link
+
+https://drive.google.com/file/d/1DAADwxqLnvpQ2SXZyLaETM-nm9boshWo/view
+
 ## Preview:
 
 ![screenshot](./assets/image/screenshot:employeeDB.png)
